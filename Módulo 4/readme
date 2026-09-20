@@ -1,0 +1,60 @@
+# Desafio Power BI - Análise de Banco de Dados Corporativo (MySQL na Azure)
+
+Este repositório apresenta a resolução do desafio de projeto do bootcamp de Analista de Power BI da DIO. O objetivo consistiu em criar uma instância de banco de dados MySQL no Microsoft Azure, realizar a carga de dados via Cloud Shell, conectar o Power BI a essa base e construir um relatório analítico sobre os dados de recursos humanos de uma empresa.
+
+## Tecnologias Utilizadas
+
+- Microsoft Azure (MySQL Flexible Server)
+- Azure Cloud Shell (Bash)
+- MySQL Workbench
+- Power BI Desktop
+
+## Processo de Extração e Transformação de Dados (ETL)
+
+### 1. Criação da Infraestrutura
+
+A instância do MySQL foi criada no Azure, com configuração de firewall para permitir o acesso. A base de dados `azure_company` e suas tabelas (`employee`, `departament`, `dept_locations`, `project`, `works_on`, `dependent`) foram criadas via Cloud Shell. Os dados foram inseridos a partir de um script SQL disponibilizado no GitHub do desafio.
+
+### 2. Transformações no Power Query
+
+Após a conexão do Power BI com o MySQL na Azure, as seguintes etapas de transformação foram aplicadas:
+
+- Verificação e ajuste de tipos de dados (datas e valores monetários).
+- Tratamento de valores nulos na coluna `Super_ssn`. Os funcionários sem gerente foram identificados e o valor nulo foi substituído por "Sem Gerente".
+- Mesclagem de colunas: `Fname` e `Lname` foram unidas para criar a coluna `Nome_Completo`. As colunas `Dname` e `Dlocation` foram unidas para criar a coluna `Departamento_Local`.
+- Mesclagem de tabelas (Merge): Foram realizadas junções para enriquecer a tabela de funcionários com o nome do departamento e o nome do gerente (auto-junção na tabela `employee`). Também foi realizada a mesclagem entre `departament` e `dept_locations`.
+- Agrupamento de dados: Foi criada uma tabela agrupada para contar a quantidade de colaboradores por gerente, utilizando a operação de contagem distinta.
+
+## Modelo de Dados
+
+O modelo foi construído seguindo a estrutura de relacionamentos do banco de dados original, com as tabelas conectadas por chaves primárias e estrangeiras, formando um modelo estrela para facilitar a análise.
+
+## Relatório e Visuais
+
+O dashboard foi construído com os seguintes visuais:
+
+- Cartões: Total de Funcionários e Média Salarial.
+- Gráfico de Pizza: Distribuição de funcionários por sexo.
+- Gráfico de Barras: Média salarial por departamento e Soma de horas por projeto.
+- Gráfico de Barras: Quantidade de colaboradores por gerente (atendendo ao passo 15 do desafio).
+- Tabela: Lista detalhada de funcionários, seus departamentos, gerentes e salários.
+
+## Principais Insights
+
+- A empresa possui 8 funcionários, com uma média salarial de 35,13 mil.
+- A hierarquia é liderada por James Borg (presidente), que não possui `Super_ssn`. Franklin Wong e Jennifer Wallace atuam como gerentes intermediários.
+- O departamento de Research concentra o maior número de colaboradores.
+- O projeto Computerization possui a maior soma de horas trabalhadas.
+
+## Resposta ao Desafio: Mesclar vs. Atribuir
+
+A opção Mesclar (Merge) foi utilizada porque o objetivo era cruzar informações de tabelas diferentes para adicionar colunas à tabela principal (por exemplo, trazer o nome do departamento para a tabela de funcionários). A opção Atribuir (Append) é utilizada quando se deseja empilhar tabelas com a mesma estrutura de colunas (ex: juntar funcionários de 2023 com os de 2024), o que não se aplicava a este cenário.
+
+## Como Acessar
+
+- O arquivo `.pbix` pode ser aberto no Power BI Desktop para explorar as medidas e o modelo.
+- O arquivo `.pdf` contém a exportação do relatório para visualização rápida.
+- Screenshots de passos realizados no Azure e MySQL
+
+---
+Projeto desenvolvido como parte do Bootcamp de Analista de Power BI da DIO.
